@@ -61,7 +61,7 @@ def get_delete_referral_code_use_case(
     )
 
 
-def get_referrals_by_referrer_id_use_ase(
+def get_referrals_by_referrer_id_use_case(
     session: GetSession,
 ) -> GetReferralsByReferrerIDUseCase:
     return GetReferralsByReferrerIDUseCase(SQLUserRepository(session))

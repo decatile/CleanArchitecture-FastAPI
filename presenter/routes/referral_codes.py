@@ -12,7 +12,7 @@ from presenter.dependencies import (
     get_create_referral_code_use_case,
     get_current_user,
     get_delete_referral_code_use_case,
-    get_referrals_by_referrer_id_use_ase,
+    get_referrals_by_referrer_id_use_case,
 )
 from presenter.schemes.create_referral_response import CreateReferralResponse
 from presenter.schemes.referral_code_create_request import ReferralCodeCreateRequest
@@ -46,6 +46,6 @@ async def delete(
 @referral_codes_router.get("/referrals")
 async def referrals(
     user_id: Annotated[UserID, Depends(get_current_user)],
-    usecase: Annotated[GetReferralsByReferrerIDUseCase, Depends(get_referrals_by_referrer_id_use_ase)],
+    usecase: Annotated[GetReferralsByReferrerIDUseCase, Depends(get_referrals_by_referrer_id_use_case)],
 ) -> list[int]:
     return await usecase.run(user_id.value)
