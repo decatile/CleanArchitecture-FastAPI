@@ -14,6 +14,7 @@ from presenter.dependencies import (
     get_delete_referral_code_use_case,
 )
 from presenter.schemes.create_referral_response import CreateReferralResponse
+from presenter.schemes.referral_code_create_request import ReferralCodeCreateRequest
 from presenter.schemes.tokens_set import TokensSet
 
 
@@ -34,17 +35,18 @@ def tokens_into_response(tokens: TokensSet) -> JSONResponse:
     return resp
 
 
-referral_codes_router = APIRouter()
+referral_codes_router = APIRouter(prefix='/referral_codes')
 
 
-@referral_codes_router.get("/create")
+@referral_codes_router.post("/create")
 async def create(
+    req: ReferralCodeCreateRequest,
     user_id: Annotated[UserID, Depends(get_current_user)],
     usecase: Annotated[
         CreateReferralCodeUserCase, Depends(get_create_referral_code_use_case)
     ],
 ) -> CreateReferralResponse:
-    code = await usecase.run(user_id.value)
+    code = await usecase.run(user_id.value, req.expires_in)
     return CreateReferralResponse(code=code.code)
 
 

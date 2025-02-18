@@ -33,7 +33,7 @@ def tokens_into_response(tokens: TokensSet) -> JSONResponse:
     return resp
 
 
-auth_router = APIRouter()
+auth_router = APIRouter(prefix='/auth')
 
 
 @auth_router.post("/register", response_model=TokensResponse)
