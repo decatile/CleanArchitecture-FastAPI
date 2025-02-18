@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from application.interfaces.refresh_token_repository import RefreshTokenRepository
 from domain.entities.refresh_token import RefreshToken
 from infrastructure.sql.models.refresh_token import SQLRefreshToken

@@ -1,6 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
-from infrastructure.sql.models import Base
 from presenter.settings.db import DBSettings
 
 

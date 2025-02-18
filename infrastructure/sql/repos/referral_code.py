@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from sqlalchemy import delete, select
 from application.interfaces.referral_code_repository import ReferralCodeRepository
