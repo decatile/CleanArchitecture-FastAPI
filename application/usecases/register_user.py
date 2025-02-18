@@ -2,8 +2,10 @@ import bcrypt
 
 from application.exceptions.email_already_exist import EmailAlreadyExist
 from application.exceptions.referral_code_not_exist import ReferralCodeNotExist
-from application.interfaces.referral_code_repository import ReferralCodeRepository
 from application.interfaces.refresh_token_repository import RefreshTokenRepository
+from application.interfaces.user_id_by_referral_code_service import (
+    UserIDByReferralCodeService,
+)
 from application.interfaces.user_repository import UserRepository
 from application.schemas.tokens import RefreshTokenResponseDTO
 from settings.refresh_token import RefreshTokenSettings
@@ -14,7 +16,7 @@ class RegisterUserUseCase:
         self,
         users: UserRepository,
         refresh_tokens: RefreshTokenRepository,
-        referral_codes: ReferralCodeRepository,
+        referral_codes: UserIDByReferralCodeService,
         refresh_settings: RefreshTokenSettings,
     ) -> None:
         self.users = users
@@ -29,10 +31,9 @@ class RegisterUserUseCase:
             raise EmailAlreadyExist()
         ref_id = None
         if referral_code is not None:
-            code = await self.referral_codes.find_by_id(referral_code)
-            if code is None:
+            ref_id = await self.referral_codes.user_id_by_referral_code(referral_code)
+            if ref_id is None:
                 raise ReferralCodeNotExist()
-            ref_id = code.user_id.value
         user = await self.users.create(
             ref_id,
             email,

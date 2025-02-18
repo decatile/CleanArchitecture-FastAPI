@@ -1,4 +1,5 @@
 from typing import Annotated, AsyncGenerator
+from redis.asyncio import Redis
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,28 +12,42 @@ from application.usecases.get_referrals_by_referrer_id import (
 )
 from application.usecases.register_user import RegisterUserUseCase
 from domain.entities.user import UserID
+from infrastructure.common.services.redis import RedisService
+from infrastructure.common.services.user_id_by_referral_code import (
+    RedisUserIDByReferralCodeService,
+)
 from infrastructure.sql.repos.referral_code import SQLReferralCodeRepository
 from infrastructure.sql.repos.refresh_token import SQLRefreshTokenRepository
 from infrastructure.sql.repos.user import SQLUserRepository
 from infrastructure.sql.services.db import SQLDatabaseService
 from presenter.services.jwt import JwtService, JwtSettings
 from settings.db import DBSettings
+from settings.redis import RedisSettings
 
 
 async def get_session() -> AsyncGenerator[AsyncSession]:
-    session = SQLDatabaseService.session(DBSettings())  # type: ignore
+    session = SQLDatabaseService.get(DBSettings())  # type: ignore
     async with session.begin():
         yield session
 
 
+async def get_redis() -> Redis:
+    return RedisService.get(RedisSettings())  # type: ignore
+
+
 GetSession = Annotated[AsyncSession, Depends(get_session)]
+GetRedis = Annotated[Redis, Depends(get_redis)]
 
 
-def get_register_use_case(session: GetSession) -> RegisterUserUseCase:
+def get_register_use_case(session: GetSession, redis: GetRedis) -> RegisterUserUseCase:
     return RegisterUserUseCase(
         SQLUserRepository(session),
         SQLRefreshTokenRepository(session),
-        SQLReferralCodeRepository(session),
+        RedisUserIDByReferralCodeService(
+            SQLReferralCodeRepository(session),
+            redis,
+            RedisSettings(),  # type: ignore
+        ),
         RefreshTokenSettings(),  # type: ignore
     )
 
