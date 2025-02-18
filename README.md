@@ -9,3 +9,5 @@
 ```
 > docker compose up
 ```
+
+Для генерации OpenAPI документации используйте `python main.py -D`
