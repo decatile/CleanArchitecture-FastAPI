@@ -16,7 +16,7 @@ from infrastructure.sql.repos.refresh_token import SQLRefreshTokenRepository
 from infrastructure.sql.repos.user import SQLUserRepository
 from infrastructure.sql.services.db import SQLDatabaseService
 from presenter.services.jwt import JwtService, JwtSettings
-from presenter.settings.db import DBSettings
+from settings.db import DBSettings
 
 
 async def get_session() -> AsyncGenerator[AsyncSession]:

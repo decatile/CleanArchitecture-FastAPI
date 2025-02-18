@@ -6,7 +6,7 @@ from application.interfaces.referral_code_repository import ReferralCodeReposito
 from application.interfaces.refresh_token_repository import RefreshTokenRepository
 from application.interfaces.user_repository import UserRepository
 from application.schemas.tokens import RefreshTokenResponseDTO
-from application.settings.refresh_token import RefreshTokenSettings
+from settings.refresh_token import RefreshTokenSettings
 
 
 class RegisterUserUseCase:

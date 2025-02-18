@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 
-from presenter.settings.db import DBSettings
+from settings.db import DBSettings
 
 
 class SQLDatabaseService:
@@ -9,5 +9,5 @@ class SQLDatabaseService:
     @staticmethod
     def session(settings: DBSettings) -> AsyncSession:
         if SQLDatabaseService.__engine is None:
-            SQLDatabaseService.__engine = create_async_engine(settings.db_url)
+            SQLDatabaseService.__engine = create_async_engine(settings.url)
         return AsyncSession(SQLDatabaseService.__engine)
