@@ -6,6 +6,8 @@ from infrastructure.sql.models.base import Base
 
 
 class SQLReferralCode(Base):
+    __tablename__ = 'referral_codes'
+    
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     expires_at: Mapped[datetime] = mapped_column(DateTime)
