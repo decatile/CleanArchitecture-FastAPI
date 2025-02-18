@@ -1,8 +1,8 @@
 """init
 
-Revision ID: 7765ac6d984b
+Revision ID: 366761dfe28e
 Revises: 
-Create Date: 2025-02-18 20:09:30.027543
+Create Date: 2025-02-18 21:35:16.685452
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '7765ac6d984b'
+revision: str = '366761dfe28e'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -30,14 +30,14 @@ def upgrade() -> None:
     op.create_table('referral_codes',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('expires_at', sa.DateTime(), nullable=False),
+    sa.Column('expires_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('refresh_tokens',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
-    sa.Column('expires_at', sa.DateTime(), nullable=False),
+    sa.Column('expires_at', sa.DateTime(timezone=True), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

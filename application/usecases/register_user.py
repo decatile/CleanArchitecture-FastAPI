@@ -25,7 +25,7 @@ class RegisterUserUseCase:
     async def run(
         self, referral_code: str | None, email: str, password: str
     ) -> RefreshTokenResponseDTO:
-        if self.users.find_by_email(email) is not None:
+        if (await self.users.find_by_email(email)) is not None:
             raise EmailAlreadyExist()
         ref_id = None
         if referral_code is not None:

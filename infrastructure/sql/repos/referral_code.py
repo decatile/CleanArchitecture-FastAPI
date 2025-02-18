@@ -24,7 +24,10 @@ class SQLReferralCodeRepository(SQLRepositoryBase, ReferralCodeRepository):
         return r.rowcount > 0
 
     async def find_by_id(self, id: str) -> ReferralCode | None:
-        return await self.session.get(ReferralCode, id)
+        code = await self.session.get(SQLReferralCode, id)
+        if code is None:
+            return None
+        return ReferralCode.new(code.id, code.user_id, code.expires_at)
 
     async def find_by_user_id(self, user_id: int) -> ReferralCode | None:
         c = await self.session.scalar(

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 
 from application.exceptions.base import ApplicationException
 
@@ -9,7 +9,7 @@ app = FastAPI()
 
 
 @app.exception_handler(ApplicationException)
-def application_exception_handler(exc: ApplicationException):
+def application_exception_handler(_: Request, exc: ApplicationException):
     raise HTTPException(400, str(exc))
 
 

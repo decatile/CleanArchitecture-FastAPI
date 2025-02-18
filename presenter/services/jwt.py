@@ -14,7 +14,7 @@ class JwtService:
     def write(self, token_response: RefreshTokenResponseDTO) -> TokensSet:
         access_token = jwt.encode(
             {
-                "sub": token_response.user_id,
+                "sub": str(token_response.user_id),
                 "exp": int(utc_now().timestamp()) + self.settings.expires_in,
             },
             self.settings.key,
@@ -30,6 +30,6 @@ class JwtService:
     def read(self, value: str) -> JwtObject | None:
         try:
             obj = jwt.decode(value, self.settings.key, ["HS256"], verify=True)
-            return JwtObject(obj["sub"])
+            return JwtObject(int(obj["sub"]))
         except jwt.DecodeError:
             return None
