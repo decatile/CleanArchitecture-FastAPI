@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 from domain.entities.refresh_token import RefreshToken
 
