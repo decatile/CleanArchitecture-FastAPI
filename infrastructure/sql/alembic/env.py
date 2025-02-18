@@ -43,7 +43,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = DBSettings().db_url # type: ignore
+    url = DBSettings().url # type: ignore
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -69,7 +69,7 @@ async def run_async_migrations() -> None:
     """
 
     section = config.get_section(config.config_ini_section, {})
-    section['sqlalchemy.url'] = DBSettings().db_url # type: ignore
+    section['sqlalchemy.url'] = DBSettings().url # type: ignore
     connectable = async_engine_from_config(
         section,
         prefix="sqlalchemy.",

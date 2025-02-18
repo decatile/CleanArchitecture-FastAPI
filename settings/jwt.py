@@ -5,4 +5,4 @@ class JwtSettings(BaseSettings):
     key: str
     expires_in: int
 
-    model_config = SettingsConfigDict(env_prefix="JWT_TOKEN")
+    model_config = SettingsConfigDict(env_prefix="JWT_TOKEN_")

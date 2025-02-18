@@ -1,6 +1,8 @@
 from pydantic import BaseModel
 
+from presenter.schemes.base import Email
+
 
 class AuthRequest(BaseModel):
-    email: str
+    email: Email
     password: str

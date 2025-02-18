@@ -40,7 +40,7 @@ auth_router = APIRouter(prefix='/auth')
 async def register(
     req: RegisterRequest,
     jwt: Annotated[JwtService, Depends(get_jwt_service)],
-    usecase: Annotated[RegisterUserUseCase, get_register_use_case],
+    usecase: Annotated[RegisterUserUseCase, Depends(get_register_use_case)],
 ) -> JSONResponse:
     token = await usecase.run(req.referral_code, req.email, req.password)
     tokens = jwt.write(token)

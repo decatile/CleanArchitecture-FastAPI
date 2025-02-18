@@ -73,7 +73,7 @@ def get_jwt_service() -> JwtService:
 
 def get_current_user(
     jwt: Annotated[JwtService, Depends(get_jwt_service)],
-    c: Annotated[HTTPAuthorizationCredentials, HTTPBearer()],
+    c: Annotated[HTTPAuthorizationCredentials, Depends(HTTPBearer())],
 ) -> UserID:
     if c.scheme != "Bearer":
         raise HTTPException(status_code=HTTP_403_FORBIDDEN, detail="Not authenticated")

@@ -12,30 +12,12 @@ from presenter.dependencies import (
     get_create_referral_code_use_case,
     get_current_user,
     get_delete_referral_code_use_case,
+    get_referrals_by_referrer_id_use_ase,
 )
 from presenter.schemes.create_referral_response import CreateReferralResponse
 from presenter.schemes.referral_code_create_request import ReferralCodeCreateRequest
-from presenter.schemes.tokens_set import TokensSet
 
-
-def tokens_into_response(tokens: TokensSet) -> JSONResponse:
-    resp = JSONResponse(
-        {
-            "access_token": tokens.access_token,
-            "expires_in": tokens.access_token_expires_in,
-        }
-    )
-    resp.set_cookie(
-        "refresh_token",
-        tokens.refresh_token,
-        max_age=tokens.refresh_token_expires_in,
-        secure=True,
-        httponly=True,
-    )
-    return resp
-
-
-referral_codes_router = APIRouter(prefix='/referral_codes')
+referral_codes_router = APIRouter(prefix="/referral_codes")
 
 
 @referral_codes_router.post("/create")
@@ -64,6 +46,6 @@ async def delete(
 @referral_codes_router.get("/referrals")
 async def referrals(
     user_id: Annotated[UserID, Depends(get_current_user)],
-    usecase: Annotated[GetReferralsByReferrerIDUseCase, Depends()],
+    usecase: Annotated[GetReferralsByReferrerIDUseCase, Depends(get_referrals_by_referrer_id_use_ase)],
 ) -> list[int]:
     return await usecase.run(user_id.value)

@@ -2,7 +2,7 @@ import jwt
 
 from application.schemas.tokens import RefreshTokenResponseDTO
 from settings.jwt import JwtSettings
-from presenter.routes.auth import TokensSet
+from presenter.schemes.tokens_set import TokensSet
 from presenter.schemes.jwt_object import JwtObject
 from utils.datetime import utc_now
 
