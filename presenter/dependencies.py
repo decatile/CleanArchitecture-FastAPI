@@ -12,9 +12,12 @@ from application.usecases.get_referrals_by_referrer_id import (
 )
 from application.usecases.register_user import RegisterUserUseCase
 from domain.entities.user import UserID
-from infrastructure.common.services.redis import RedisService
-from infrastructure.common.services.user_id_by_referral_code import (
-    RedisUserIDByReferralCodeService,
+from infrastructure.common.repo.cleanuping_referral_code import (
+    CleanupingReferralCodeRepository,
+)
+from infrastructure.common.services.redis_referral_code import RedisReferralCodeService
+from infrastructure.sql.repos.caching_referral_code import (
+    SQLRedisCachingReferralCodeRepository,
 )
 from infrastructure.sql.repos.referral_code import SQLReferralCodeRepository
 from infrastructure.sql.repos.refresh_token import SQLRefreshTokenRepository
@@ -22,7 +25,7 @@ from infrastructure.sql.repos.user import SQLUserRepository
 from infrastructure.sql.services.db import SQLDatabaseService
 from presenter.services.jwt import JwtService, JwtSettings
 from settings.db import DBSettings
-from settings.redis import RedisSettings
+from settings.redis_referral_code import RedisReferralCodeSettings
 
 
 async def get_session() -> AsyncGenerator[AsyncSession]:
@@ -31,22 +34,24 @@ async def get_session() -> AsyncGenerator[AsyncSession]:
         yield session
 
 
-async def get_redis() -> Redis:
-    return RedisService.get(RedisSettings())  # type: ignore
+async def get_referral_code_redis() -> Redis:
+    return RedisReferralCodeService.get(RedisReferralCodeSettings())  # type: ignore
 
 
 GetSession = Annotated[AsyncSession, Depends(get_session)]
-GetRedis = Annotated[Redis, Depends(get_redis)]
+GetReferralCodeRedis = Annotated[Redis, Depends(get_referral_code_redis)]
 
 
-def get_register_use_case(session: GetSession, redis: GetRedis) -> RegisterUserUseCase:
+def get_register_use_case(session: GetSession, redis: GetReferralCodeRedis) -> RegisterUserUseCase:
     return RegisterUserUseCase(
         SQLUserRepository(session),
         SQLRefreshTokenRepository(session),
-        RedisUserIDByReferralCodeService(
-            SQLReferralCodeRepository(session),
-            redis,
-            RedisSettings(),  # type: ignore
+        CleanupingReferralCodeRepository(
+            SQLRedisCachingReferralCodeRepository(
+                session,
+                redis,
+                RedisReferralCodeSettings(),  # type: ignore
+            )
         ),
         RefreshTokenSettings(),  # type: ignore
     )

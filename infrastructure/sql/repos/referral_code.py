@@ -17,6 +17,10 @@ class SQLReferralCodeRepository(SQLRepositoryBase, ReferralCodeRepository):
         await self.session.flush()
         return ReferralCode.new(c.id, c.user_id, c.expires_at)
 
+    async def delete(self, id: str) -> bool:
+        r = await self.session.execute(delete(SQLReferralCode).filter_by(id=id))
+        return r.rowcount > 0
+
     async def delete_by_user_id(self, user_id: int) -> bool:
         r = await self.session.execute(
             delete(SQLReferralCode).filter_by(user_id=user_id)

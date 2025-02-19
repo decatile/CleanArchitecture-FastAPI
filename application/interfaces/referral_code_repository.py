@@ -8,6 +8,9 @@ class ReferralCodeRepository(ABC):
     async def create(self, user_id: int, expires_in: int) -> ReferralCode: ...
 
     @abstractmethod
+    async def delete(self, id: str) -> bool: ...
+
+    @abstractmethod
     async def delete_by_user_id(self, user_id: int) -> bool: ...
 
     @abstractmethod

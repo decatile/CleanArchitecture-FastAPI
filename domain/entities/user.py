@@ -1,16 +1,14 @@
 from dataclasses import dataclass
-from typing import Optional
-
-from domain.entities.base import NewType
+from typing import Optional, NewType
 
 
-class UserID(NewType[int]): ...
+UserID = NewType("UserID", int)
 
 
-class Email(NewType[str]): ...
+Email = NewType("Email", str)
 
 
-class Password(NewType[str]): ...
+Password = NewType("Password", str)
 
 
 @dataclass(frozen=True)

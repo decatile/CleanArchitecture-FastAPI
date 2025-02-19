@@ -19,7 +19,7 @@ class CreateReferralCodeUserCase:
         user = await self.users.find_by_id(user_id)
         if user is None:
             raise UserNotFound()
-        if (await self.referral_codes.find_by_user_id(user.id.value)) is not None:
+        if (await self.referral_codes.find_by_user_id(user.id)) is not None:
             raise ReferralCodeAlreadyExist()
-        code = await self.referral_codes.create(user.id.value, lifetime)
-        return ReferralCodeResponseDTO(str(code.id.value))
+        code = await self.referral_codes.create(user.id, lifetime)
+        return ReferralCodeResponseDTO(str(code.id))

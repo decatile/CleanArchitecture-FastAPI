@@ -28,7 +28,7 @@ async def create(
         CreateReferralCodeUserCase, Depends(get_create_referral_code_use_case)
     ],
 ) -> CreateReferralResponse:
-    code = await usecase.run(user_id.value, req.expires_in)
+    code = await usecase.run(user_id, req.expires_in)
     return CreateReferralResponse(code=code.code)
 
 
@@ -39,7 +39,7 @@ async def delete(
         DeleteReferralCodeUserCase, Depends(get_delete_referral_code_use_case)
     ],
 ) -> JSONResponse:
-    await usecase.run(user_id.value)
+    await usecase.run(user_id)
     return JSONResponse({})
 
 
@@ -47,5 +47,5 @@ async def delete(
 async def referrals(
     user_id: Annotated[UserID, Depends(get_current_user)],
     usecase: Annotated[GetReferralsByReferrerIDUseCase, Depends(get_referrals_by_referrer_id_use_case)],
-) -> list[int]:
-    return await usecase.run(user_id.value)
+) -> list[str]:
+    return await usecase.run(user_id)

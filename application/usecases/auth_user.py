@@ -23,12 +23,12 @@ class AuthUserUseCase:
         user = await self.users.find_by_email(email)
         if user is None:
             raise EmailNotExist()
-        if not bcrypt.checkpw(user.password.value.encode(), password.encode()):
+        if not bcrypt.checkpw(user.password.encode(), password.encode()):
             raise InvalidPassword()
         token = await self.refresh_tokens.create(
-            user.id.value, self.refresh_settings.expires_in
+            user.id, self.refresh_settings.expires_in
         )
         return RefreshTokenResponseDTO(
-            user.id.value,
-            str(token.id.value), self.refresh_settings.expires_in
+            user.id,
+            str(token.id), self.refresh_settings.expires_in
         )

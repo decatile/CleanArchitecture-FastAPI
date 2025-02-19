@@ -15,5 +15,5 @@ class DeleteReferralCodeUserCase:
         user = await self.users.find_by_id(user_id)
         if user is None:
             raise UserNotFound()
-        if not await self.referral_codes.delete_by_user_id(user.id.value):
+        if not await self.referral_codes.delete_by_user_id(user.id):
             raise ReferralCodeNotExist()

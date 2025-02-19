@@ -16,7 +16,7 @@ class GetReferralCodeByEmailUseCase:
         user = await self.users.find_by_email(email)
         if user is None:
             raise UserNotFound()
-        code = await self.referral_codes.find_by_user_id(user.id.value)
+        code = await self.referral_codes.find_by_user_id(user.id)
         if code is None:
             raise ReferralCodeNotExist()
-        return ReferralCodeResponseDTO(str(code.id.value))
+        return ReferralCodeResponseDTO(str(code.id))
