@@ -5,4 +5,4 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-cache --without dev
 COPY . .
 CMD poetry run alembic upgrade head && \
-    poetry run uvicorn main:app --host 0.0.0.0 --port 8000
+    poetry run gunicorn main:app -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8000
