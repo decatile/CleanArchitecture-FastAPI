@@ -6,8 +6,8 @@ from settings.db import DBSettings
 class SQLDatabaseService:
     __engine: AsyncEngine | None = None
 
-    @staticmethod
-    def get(settings: DBSettings) -> AsyncSession:
-        if SQLDatabaseService.__engine is None:
-            SQLDatabaseService.__engine = create_async_engine(settings.url)
-        return AsyncSession(SQLDatabaseService.__engine)
+    @classmethod
+    def get(cls, settings: DBSettings) -> AsyncSession:
+        if cls.__engine is None:
+            cls.__engine = create_async_engine(settings.url)
+        return AsyncSession(cls.__engine)

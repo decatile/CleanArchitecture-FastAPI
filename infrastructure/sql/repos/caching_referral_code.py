@@ -11,6 +11,7 @@ from infrastructure.sql.models.referral_code import SQLReferralCode
 from infrastructure.sql.repos.referral_code import SQLReferralCodeRepository
 from settings.redis_referral_code import RedisReferralCodeSettings
 
+
 class SQLRedisCachingReferralCodeRepository(SQLReferralCodeRepository):
     def __init__(
         self, session: AsyncSession, redis: Redis, settings: RedisReferralCodeSettings
@@ -46,6 +47,8 @@ class SQLRedisCachingReferralCodeRepository(SQLReferralCodeRepository):
         await p.execute()
 
     async def __del(self, id: str) -> None:
+        if (await self.redis.get(id)) is None:
+            return
         p = self.redis.pipeline()
         p.set(id, "del")
         p.expire(id, timedelta(minutes=self.settings.expires_in))

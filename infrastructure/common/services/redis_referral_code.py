@@ -6,8 +6,8 @@ from settings.redis_referral_code import RedisReferralCodeSettings
 class RedisReferralCodeService:
     __client = None
 
-    @staticmethod
-    def get(settings: RedisReferralCodeSettings) -> Redis:
-        if RedisReferralCodeService.__client is None:
-            RedisReferralCodeService.__client = from_url(settings.url)
-        return RedisReferralCodeService.__client
+    @classmethod
+    def get(cls, settings: RedisReferralCodeSettings) -> Redis:
+        if cls.__client is None:
+            cls.__client = from_url(settings.url)
+        return cls.__client
